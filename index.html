@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/css.css">
+    <script src="js/jquery-1.11.3.js"></script>
+</head>
+<body>
+<!--外围盒子-->
+<div class="wrapper">
+    <!--轮播-->
+    <div id="banner">
+        <img src="img/01.jpg" alt="">
+        <img src="img/02.jpg" alt="">
+        <img src="img/03.jpg" alt="">
+        <img src="img/04.jpg" alt="">
+        <img src="img/05.jpg" alt="">
+    </div>
+    <!--焦点-->
+    <ul>
+        <li>01 <span></span></li>
+        <li>02<span></span></li>
+        <li>03<span></span></li>
+        <li>04<span></span></li>
+        <li>05<span></span></li>
+    </ul>
+    <button class="left"> &lt; </button>
+    <button class="right"> &gt; </button>
+</div>
+</body>
+
+<script>
+    $(function () {
+        var num=0;
+        $("li").children("span").css("display","none");
+        $("li").eq(0).css("background","#c12318");
+        $("li").eq(0).children("span").css("display","block");
+        var oW=$(".wrapper").width();//外围盒子宽度
+        $("#banner img:eq(0)").clone().appendTo("#banner");
+        $(".right").click(function () {
+            if(!$("#banner").is(":animated")){
+                num++;
+                $("#banner").animate({"left":-num*oW+"px"},1000,function () {
+                    if(num==$("#banner img").length-1){
+                        num=0;
+                        $("#banner").css("left","0px");
+                    }
+                    Dian(num);
+                });
+
+            }
+        });
+        $(".left").click(function () {
+            if(!$("#banner").is(":animated")){
+                if(num==0){
+                    num=$("#banner img").length-1;
+                    $("#banner").css("left",-num*oW+"px");
+                }
+                num--;
+                $("#banner").animate({"left":-num*oW+"px"},1000);
+                Dian(num);
+            }
+
+        });
+        //焦点
+        $("li").click(function () {
+            var a=$(this).index();
+            Dian(a);
+            if(a>num){
+                $("#banner").css({"left":-(a-1)*oW+"px"}).animate({"left":-a*oW+"px"});
+                num=a;
+            }else if(a<num){
+                $("#banner").css({"left":-(a+1)*oW+"px"}).animate({"left":-a*oW+"px"});
+                num=a;
+            }else if(a=num){
+                $("#banner").animate({"left":-a*oW+"px"});
+            }
+        });
+        //点的函数
+        function Dian(index) {
+            $("li").children("span").css("display","none");
+            $("li").eq(index).children("span").css("display","block");
+            $("li").css("background","");
+            $("li").eq(index).css("background","#c12318");
+        }
+        timer=setInterval(function () {
+            $(".right").click()
+        },2000);
+        $(".wrapper").hover(function () {
+            clearInterval(timer)
+        },function () {
+            timer=setInterval(function () {
+                $(".right").click()
+            },2000)
+        })
+    })
+</script>
+</html>
